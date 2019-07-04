@@ -10,6 +10,12 @@ import { FooterComponent } from './footer/footer.component';
 import { ContentComponent } from './content/content.component';
 import { NewsComponent } from './news/news.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { MainComponent } from './admin/main/main.component';
+import { MembersComponent } from './admin/members/members.component';
+import { UsersComponent } from './admin/users/users.component';
+import { PubsComponent } from './admin/pubs/pubs.component';
+import { PubnComponent } from './admin/pubn/pubn.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +26,13 @@ import { ProfileComponent } from './profile/profile.component';
     FooterComponent,
     ContentComponent,
     NewsComponent,
-    ProfileComponent
+    ProfileComponent,
+    DashboardComponent,
+    MainComponent,
+    MembersComponent,
+    UsersComponent,
+    PubsComponent,
+    PubnComponent
   ],
   imports: [
     BrowserModule,

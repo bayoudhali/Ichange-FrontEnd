@@ -7,10 +7,10 @@
       <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
     </div>
 
-    <nav class="main-nav float-left d-none d-lg-block" >
+    <nav class="main-nav float-left d-none d-lg-block" *ngIf="Visbilite">
       <ul>
         <li class="active"><a href="#intro">Accuiel</a></li>
-        <li><a href="#about" (click)="Visbilite == false ? VisbiliteProfile :true">A Propos</a></li>
+        <li><a href="#about">A Propos</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#testimonials">Actualités</a></li>
       </ul>
