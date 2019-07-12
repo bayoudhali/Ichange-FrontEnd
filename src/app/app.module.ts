@@ -1,5 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +19,10 @@ import { MembersComponent } from './admin/members/members.component';
 import { UsersComponent } from './admin/users/users.component';
 import { PubsComponent } from './admin/pubs/pubs.component';
 import { PubnComponent } from './admin/pubn/pubn.component';
+import   {Pub} from './shared/pub';
+import {ProfileService} from './profile/profile.service';
+import {AppService} from './app.service';
+import { XhrInterceptor } from './xhr.interceptor';
 
 @NgModule({
   declarations: [
@@ -37,8 +44,14 @@ import { PubnComponent } from './admin/pubn/pubn.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [ProfileService,
+              AppService,
+              { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+              CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

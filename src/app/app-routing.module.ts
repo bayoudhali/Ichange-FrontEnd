@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-
+import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {SiginInComponent} from './sigin-in/sigin-in.component';
 import {ProfileComponent} from './profile/profile.component';
@@ -12,6 +12,7 @@ import {PubsComponent} from './admin/pubs/pubs.component';
 import {PubnComponent} from './admin/pubn/pubn.component';
 
 const routes: Routes = [
+
   {path: 'login', component: LoginComponent},
   {path: 'sigin-in', component: SiginInComponent},
   {path: 'profile', component: ProfileComponent},
@@ -22,7 +23,7 @@ const routes: Routes = [
   {path: 'pubn', component: PubnComponent},
   {
   path: '',
-  redirectTo: '',
+  redirectTo: '/',
    pathMatch:'full'
 }
 ];

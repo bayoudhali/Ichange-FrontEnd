@@ -2,7 +2,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "module": "es2015",
+    "baseUrl": "",
+    "types": [
+      "leaflet"
+    ]
   },
   "include": [
     "src/**/*.ts"

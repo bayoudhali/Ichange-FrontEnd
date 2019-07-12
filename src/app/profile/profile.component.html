@@ -1,5 +1,43 @@
 
+<header id="header">
+  <div class="container">
 
+
+    <!--nav profile-->
+    <div class="dropdown float-right d-none d-lg-block">
+          <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+            <span class="avatar" style="background-image: url(assets/demo/faces/female/25.jpg)"></span>
+            <span class="ml-2 d-none d-lg-block">
+              <span class="text-default">Jane Pearson</span>
+              <small class="text-muted d-block mt-1">Administrator</small>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+            <a class="dropdown-item" href="#">
+              <i class="dropdown-icon fe fe-user"></i> Profile
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="dropdown-icon fe fe-settings"></i> Settings
+            </a>
+            <a class="dropdown-item" href="#">
+              <span class="float-right"><span class="badge badge-primary">6</span></span>
+              <i class="dropdown-icon fe fe-mail"></i> Inbox
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="dropdown-icon fe fe-send"></i> Message
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">
+              <i class="dropdown-icon fe fe-help-circle"></i> Need help?
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="dropdown-icon fe fe-log-out" (click)="logout()"></i> Sign out
+            </a>
+          </div>
+        </div>
+    <!--end nav Profile-->
+  </div>
+</header><!-- #header -->
    <!-- Main content -->
    <section class="content">
 
@@ -108,12 +146,12 @@
                       <textarea class="col-lg-11"></textarea>
                    </div>
                    <div class="box-footer">
+                     <a class="btn btn-secondary btn-xs">
+                               <input type="file" multiple="">
+               </a>
+                            <input type="text" name="" value="">
                        <button type="button" class="btn btn-secondary btn-xs" style="border-radius: 8px;">
-                         <i class="fa fa-photo">   Photo/Photos</i>
-                       </button>
-
-                       <button type="button" class="btn btn-secondary btn-xs" style="border-radius: 8px;">
-                         <i class="fa fa-map-marker">  Position</i>
+                         <i class="fa fa-map-marker"  data-toggle="modal" data-target="#map-modal">  Position</i>
                        </button>
                        <button type="button" class="btn btn-secondary btn-xs pull-right" style="border-radius: 8px;">
                          <i class="fa fa-send">  Publier</i>
@@ -147,23 +185,23 @@
                    <li><a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Commentaire(5)</a></li>
 
                  </ul>
-                  <form action="#" method="post">
+                <!--  <form action="#" method="post">-->
                <img class="img-responsive img-circle img-sm" src="./assets/dist/img/user4-128x128.jpg" alt="Alt Text">
                <!-- .img-push is used to add margin to elements next to floating images -->
                <div class="img-push">
                  <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
                </div>
-             </form>
+          <!--   </form>-->
                </div>
                <!-- /.post -->
                <div class="post">
          <!-- Box Comment -->
-         <div class="box box-widget">
+         <div class="box box-widget" *ngFor="let pub of pubs">
            <div class="box-header with-border">
              <div class="user-block">
                <img class="img-circle" src="./assets/dist/img/user1-128x128.jpg" alt="User Image">
                <span class="username"><a href="#">Jonathan Burke Jr.</a></span>
-               <span class="description">Shared publicly - 7:30 PM Today</span>
+               <span class="description">{{pub.position}} - {{pub.createdAt}} PM Today</span>
              </div>
              <!-- /.user-block -->
 
@@ -171,9 +209,9 @@
            </div>
            <!-- /.box-header -->
            <div class="box-body">
-             <img class="img-responsive pad" src="./assets/dist/img/photo2.png" alt="Photo">
+            <p>{{pub.description}}</p>
+             <img class="img-responsive pad" src="{{pub.photo}}" alt="Photo">
 
-             <p>I took this photo this morning. What do you guys think?</p>
              <ul class="list-inline">
                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> J'aime(10)</a></li>
                    <li><a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Commentaire(5)</a></li>
@@ -215,13 +253,13 @@
            </div>
            <!-- /.box-footer -->
            <div class="box-footer">
-             <form action="#" method="post">
+             <!--<form action="#" method="post">-->
                <img class="img-responsive img-circle img-sm" src="./assets/dist/img/user4-128x128.jpg" alt="Alt Text">
                <!-- .img-push is used to add margin to elements next to floating images -->
                <div class="img-push">
                  <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
                </div>
-             </form>
+             <!--</form>-->
            </div>
            <!-- /.box-footer -->
          </div>

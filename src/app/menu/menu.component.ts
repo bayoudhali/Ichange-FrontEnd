@@ -8,20 +8,21 @@ import { Component, OnInit } from '@angular/core';
 export class MenuComponent implements OnInit {
 
 Visbilite: boolean = true;
-VisbiliteProfile :boolean =false;
-Content:boolean =true;
 
+Content:boolean =true;
+Profile:boolean=false;
 onShowNavBarChange(Visbilite){
   this.Visbilite=Visbilite;
 
 
 }
-onShowProfileBarChange(VisbiliteProfile){
-this.VisbiliteProfile=VisbiliteProfile;
-}
+
 
 onHidesContentPage(Content){
   this.Content=Content;
+}
+onShowProfilePage(Profile){
+  this.Profile=Profile;
 }
   constructor() { }
 
