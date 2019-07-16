@@ -1,7 +1,7 @@
 <header id="header">
   <div class="container">
 
-    <div class="logo float-left">
+    <div class="logo float-left" *ngIf="Visbilite">
       <!-- Uncomment below if you prefer to use an image logo -->
       <h1 class="text-light"><a href="#intro" class="scrollto"><span>IChange</span></a></h1>
       <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
@@ -26,4 +26,6 @@
   </div>
 </header><!-- #header -->
 <app-content *ngIf="Content"></app-content>
-<app-login  [hideContent]="Content" (hideContentPage)="onHidesContentPage($event)"  [showNavBar]="Visbilite"  (showNavBarChange)="onShowNavBarChange($event)"  ></app-login>
+<app-login [showAdmin]="adminPage" (showAdminPage)="onShowAdminPage($event)" [hideContent]="Content" (hideContentPage)="onHidesContentPage($event)"  [showNavBar]="Visbilite"  (showNavBarChange)="onShowNavBarChange($event)"  ></app-login>
+<app-footer *ngIf="Content"></app-footer>
+<app-main *ngIf="adminPage"></app-main>

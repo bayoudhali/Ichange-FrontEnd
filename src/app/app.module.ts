@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import   {Pub} from './shared/pub';
 import {ProfileService} from './profile/profile.service';
 import {AppService} from './app.service';
 import { XhrInterceptor } from './xhr.interceptor';
+import { principalReducer } from './shared/principal.reducer';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { XhrInterceptor } from './xhr.interceptor';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({principal: principalReducer})
   ],
   providers: [ProfileService,
               AppService,

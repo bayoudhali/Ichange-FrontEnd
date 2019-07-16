@@ -11,6 +11,8 @@ Visbilite: boolean = true;
 
 Content:boolean =true;
 Profile:boolean=false;
+adminPage:boolean=false;
+
 onShowNavBarChange(Visbilite){
   this.Visbilite=Visbilite;
 
@@ -23,6 +25,10 @@ onHidesContentPage(Content){
 }
 onShowProfilePage(Profile){
   this.Profile=Profile;
+}
+
+onShowAdminPage(adminPage){
+  this.adminPage=adminPage;
 }
   constructor() { }
 

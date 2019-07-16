@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
+
 import   {Pub} from '../shared/pub';
 import {ProfileService} from '../profile/profile.service';
 import {AppService} from '../app.service';
 import {Router} from '@angular/router';
+
 
 @Component({
   selector: 'app-profile',
@@ -14,9 +16,11 @@ export class ProfileComponent implements OnInit {
 
 pubs:Pub[];
 
-  constructor(private ServiceProfile:ProfileService,private appService:AppService,private router:Router) { }
+  constructor(private ServiceProfile:ProfileService,
+    private appService:AppService,private router:Router) { }
 
   ngOnInit() {
+  
     this.loadPub();
   }
 

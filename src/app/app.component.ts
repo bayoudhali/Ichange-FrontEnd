@@ -13,7 +13,6 @@ import {AppService} from './app.service';
 export class AppComponent implements OnInit{
   title = 'iChange-FrontEnd';
 
-
 constructor(private appService:AppService,private router:Router) { }
 ngOnInit() {
   if(!this.appService.authenticated){
@@ -21,6 +20,7 @@ ngOnInit() {
     }else {
     this.router.navigateByUrl('/profile');
   }
-
 }
+
+
 }
