@@ -51,7 +51,7 @@ password :['',Validators.required]
   });
 
   this.store.select('principal').subscribe(principal => {
-    console.log(principal);
+    //console.log(principal);
         this.principal = principal;
       })
 
@@ -68,6 +68,7 @@ this.appService.authenticate(this.credentials,()=>{
   this.hideContentPage.emit(this.hideContent);
         if (this.principal.authorities[0].authority === 'ROLE_USER') {
         this.router.navigateByUrl('/profile');
+        jQuery("#alert").modal('show');
       }
       else if  (this.principal.authorities[0].authority  === 'ROLE_ADMIN' ) {
           this.showAdmin=!this.showAdmin;

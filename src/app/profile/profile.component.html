@@ -14,12 +14,12 @@
           <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
             <span class="avatar" style="background-image: url(assets/demo/faces/female/25.jpg)"></span>
             <span class="ml-2 d-none d-lg-block">
-              <span class="text-default">Jane Pearson</span>
-              <small class="text-muted d-block mt-1">Administrator</small>
+              <span class="text-default">{{user.firstname}} {{user.lastname}}</span>
+              <small class="text-muted d-block mt-1">{{user.email}}</small>
             </span>
           </a>
           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" router-link="profile">
               <i class="dropdown-icon fe fe-user"></i> Profile
             </a>
             <a class="dropdown-item" href="#">
@@ -58,7 +58,7 @@
            <div class="box-body box-profile">
              <img class="profile-user-img img-responsive img-circle" src="./assets/dist/img/user4-128x128.jpg" alt="User profile picture">
 
-             <h3 class="profile-username text-center">Nina Mcintire</h3>
+             <h3 class="profile-username text-center">{{user.firstname}} {{user.lastname}}</h3>
            </div>
            <!-- /.box-body -->
          </div>
@@ -74,14 +74,14 @@
              <strong><i class="fa fa-book margin-r-5"></i> Description</strong>
 
              <p class="text-muted">
-               B.S. in Computer Science from the University of Tennessee at Knoxville
+               {{user.description}}
              </p>
 
              <hr>
 
              <strong><i class="fa fa-map-marker margin-r-5"></i> Position</strong>
 
-             <p class="text-muted">Malibu, California</p>
+             <p class="text-muted">{{user.place}}</p>
              <hr>
 
              <strong><i class="fa fa-newspaper-o margin-r-5"></i> News</strong>

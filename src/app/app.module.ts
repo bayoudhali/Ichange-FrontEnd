@@ -22,6 +22,7 @@ import { PubsComponent } from './admin/pubs/pubs.component';
 import { PubnComponent } from './admin/pubn/pubn.component';
 import   {Pub} from './shared/pub';
 import {ProfileService} from './profile/profile.service';
+import {UserService} from './shared/user.service';
 import {AppService} from './app.service';
 import { XhrInterceptor } from './xhr.interceptor';
 import { principalReducer } from './shared/principal.reducer';
@@ -53,7 +54,8 @@ import { principalReducer } from './shared/principal.reducer';
   providers: [ProfileService,
               AppService,
               { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-              CookieService
+              CookieService,
+              UserService
   ],
   bootstrap: [AppComponent]
 })
