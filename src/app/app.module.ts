@@ -28,6 +28,7 @@ import {AppService} from './app.service';
 import { XhrInterceptor } from './xhr.interceptor';
 import { principalReducer } from './shared/principal.reducer';
 import { MapComponent } from './map/map.component';
+import {MainService} from './admin/main/main.service';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { MapComponent } from './map/map.component';
               AppService,
               { provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
               CookieService,
-              UserService
+              UserService,
+              MainService
   ],
   bootstrap: [AppComponent]
 })

@@ -205,9 +205,9 @@
           <!--   </form>-->
                </div>
                <!-- /.post -->
-               <div class="post">
+               <div class="post" *ngFor="let pub of pubs">
          <!-- Box Comment -->
-         <div class="box box-widget" *ngFor="let pub of pubs">
+         <div class="box box-widget" *ngIf="pub.enable!=false">
            <div class="box-header with-border">
              <div class="user-block">
                <img class="img-circle" src="data:image/png;base64,{{pub.userId.photo}}" alt="User Image">

@@ -9,7 +9,7 @@
            <div class="col-xs-12">
        <div class="box">
          <div class="box-header">
-           <h3 class="box-title">Responsive Hover Table</h3>
+           <h3 class="box-title">Pubs</h3>
 
            <div class="box-tools">
              <div class="input-group input-group-sm" style="width: 150px;">
@@ -25,41 +25,24 @@
          <div class="box-body table-responsive no-padding">
            <table class="table table-hover">
              <tr>
-               <th>ID</th>
-               <th>User</th>
+               <th>Photo</th>
+               <th>Place</th>
                <th>Date</th>
                <th>Status</th>
-               <th>Reason</th>
+               <th></th>
+               <th>Description</th>
+               <th>User<th>
              </tr>
-             <tr>
-               <td>183</td>
-               <td>John Doe</td>
-               <td>11-7-2014</td>
-               <td><span class="label label-success">Approved</span></td>
-               <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+             <tr *ngFor="let pub of pubs">
+               <td><img style="width:50px;height:50px;" src="data:image/png;base64,{{pub.photo}}"></td>
+               <td>{{pub.position}}</td>
+               <td>{{pub.createdAt}}</td>
+               <td *ngIf="pub.enable!=false; else elseBlock"><span class="label label-success">Approved</span></td>
+               <td><ng-template #elseBlock><span class="label label-danger">Not Approved</span></ng-template></td>
+               <td>{{pub.description}}</td>
+                <td>{{pub.userId.firstname}} {{pub.userId.lastname}}</td>
              </tr>
-             <tr>
-               <td>219</td>
-               <td>Alexander Pierce</td>
-               <td>11-7-2014</td>
-               <td><span class="label label-warning">Pending</span></td>
-               <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-             </tr>
-             <tr>
-               <td>657</td>
-               <td>Bob Doe</td>
-               <td>11-7-2014</td>
-               <td><span class="label label-primary">Approved</span></td>
-               <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-             </tr>
-             <tr>
-               <td>175</td>
-               <td>Mike Doe</td>
-               <td>11-7-2014</td>
-               <td><span class="label label-danger">Denied</span></td>
-               <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-             </tr>
-           </table>
+         </table>
          </div>
          <!-- /.box-body -->
        </div>
