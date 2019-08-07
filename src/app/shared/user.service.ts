@@ -30,4 +30,5 @@ deleteUser(id:number):Observable<any>{
 
 return this.http.delete(API_URLS.USER_CRUD_URL + '/${id}');
 }
+
 }

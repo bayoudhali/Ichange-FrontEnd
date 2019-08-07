@@ -12,7 +12,7 @@
     <!--nav profile-->
     <div class="dropdown float-right d-none d-lg-block">
           <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-            <span class="avatar" style="background-image: url(assets/demo/faces/female/25.jpg)"></span>
+            <img class="avatar" src="data:image/png;base64,{{user.photo}}">
             <span class="ml-2 d-none d-lg-block">
               <span class="text-default">{{user.firstname}} {{user.lastname}}</span>
               <small class="text-muted d-block mt-1">{{user.email}}</small>
@@ -22,7 +22,7 @@
             <a class="dropdown-item" router-link="profile">
               <i class="dropdown-icon fe fe-user"></i> Profile
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" data-toggle="modal" data-target="#settings">
               <i class="dropdown-icon fe fe-settings"></i> Settings
             </a>
             <a class="dropdown-item" href="#">
@@ -56,7 +56,7 @@
          <!-- Profile Image -->
          <div class="box box-primary">
            <div class="box-body box-profile">
-             <img class="profile-user-img img-responsive img-circle" src="./assets/dist/img/user4-128x128.jpg" alt="User profile picture">
+             <img class="profile-user-img img-responsive img-circle" src="data:image/png;base64,{{user.photo}}" alt="User profile picture">
 
              <h3 class="profile-username text-center">{{user.firstname}} {{user.lastname}}</h3>
            </div>
@@ -79,7 +79,7 @@
 
              <hr>
 
-             <strong><i class="fa fa-map-marker margin-r-5"></i> Position</strong>
+             <strong><i class="fa fa-map-marker margin-r-5"></i> Ville Actuelle</strong>
 
              <p class="text-muted">{{user.place}}</p>
              <hr>
@@ -150,27 +150,29 @@
                    <div class="box-header with-border">
                     <h5>Créer une publication</h5>
                    </div>
+                   <form [formGroup]="PubForm">
                    <div class="box-body">
-                     <div class="user-block col-lg-1"><img class="img-circle img-bordered-sm" src="./assets/dist/img/user4-128x128.jpg" alt="User Image"></div>
-                      <textarea class="col-lg-11"></textarea>
+                     <div class="user-block col-lg-1"><img class="img-circle img-bordered-sm" src="data:image/png;base64,{{user.photo}}" alt="User Image"></div>
+                      <textarea class="col-lg-11" formControlName="description" [(ngModel)]="pubAttribute.description"></textarea>
                    </div>
                    <div class="box-footer">
-                     <a class="btn btn-secondary btn-xs">
-                               <input type="file" multiple="">
-               </a>
-                            <input type="text" name="" value="">
-                       <button type="button" class="btn btn-secondary btn-xs" style="border-radius: 8px;">
-                         <i class="fa fa-map-marker"  data-toggle="modal" data-target="#map-modal">  Position</i>
-                       </button>
-                       <button type="button" class="btn btn-secondary btn-xs pull-right" style="border-radius: 8px;">
+                     <a class="btn btn-secondary btn-xs col-lg-3">
+                               <input type="file" id="image" (change)="UploadChange($event)">
+                      </a>
+
+                  <input type="text"  class="form-control col-sm-8" placeholder="Ajouter une adresse" formControlName="position" [(ngModel)]="pubAttribute.position">
+
+
+                       <button type="button" class="btn btn-secondary btn-xs pull-right" style="border-radius: 8px;" (click)="UploadPub()">
                          <i class="fa fa-send">  Publier</i>
                        </button>
                     </div>
+                    </form>
                  </div>
                  <div style="margin-bottom: 2em;"></div>
 
           <div class="tab-content">
-             <div class="active tab-pane">
+                     <div class="active tab-pane">
                <!-- Post -->
                <div class="post">
                  <div class="user-block">
@@ -208,71 +210,78 @@
          <div class="box box-widget" *ngFor="let pub of pubs">
            <div class="box-header with-border">
              <div class="user-block">
-               <img class="img-circle" src="./assets/dist/img/user1-128x128.jpg" alt="User Image">
-               <span class="username"><a href="#">Jonathan Burke Jr.</a></span>
-               <span class="description">{{pub.position}} - {{pub.createdAt}} PM Today</span>
+               <img class="img-circle" src="data:image/png;base64,{{pub.userId.photo}}" alt="User Image">
+               <span class="username"><a href="#">{{pub.userId.firstname}} {{pub.userId.lastname}}</a></span>
+               <span class="description">{{pub.position}} - {{pub.createdAt}}</span>
              </div>
              <!-- /.user-block -->
-
+             <div class="box-tools" *ngIf="user.id===pub.userId.id">
+                           <button type="button" class="btn btn-box-tool" data-toggle="modal" data-target="#updatePub">
+                             <i class="fa fa-edit"></i></button>
+                           <button type="button" class="btn btn-box-tool" (click)="deletePub(pub.id)" data-widget="remove" data-toggle="modal" data-target="#alertPop">
+                             <i class="fa fa-times"></i></button>
+                         </div>
              <!-- /.box-tools -->
            </div>
            <!-- /.box-header -->
            <div class="box-body">
             <p>{{pub.description}}</p>
-             <img class="img-responsive pad" src="{{pub.photo}}" alt="Photo">
-
+            <p>
+             <img class="img-responsive pad" src="data:image/png;base64,{{pub.photo}}" alt="Photo">
+             </p>
              <ul class="list-inline">
                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> J'aime(10)</a></li>
                    <li><a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Commentaire(5)</a></li>
 
                  </ul>
-           </div>
+               </div>
            <!-- /.box-body -->
-           <div class="box-footer box-comments">
-             <div class="box-comment">
-               <!-- User image -->
-               <img class="img-circle img-sm" src="./assets/dist/img/user3-128x128.jpg" alt="User Image">
+           <div class="box-footer box-comments" *ngFor="let comm of comments">
+
+               <div class="box-comment"  *ngIf="pub.id===comm.pub">
+
+                     <img class="img-circle img-sm" src="data:image/png;base64,{{comm.user.photo}}" alt="User Image">
 
                <div class="comment-text">
-                     <span class="username">
-                       Maria Gonzales
-                       <span class="text-muted pull-right">8:03 PM Today</span>
-                     </span><!-- /.username -->
-                 It is a long established fact that a reader will be distracted
-                 by the readable content of a page when looking at its layout.
-               </div>
-               <!-- /.comment-text -->
-             </div>
-             <!-- /.box-comment -->
-             <div class="box-comment">
-               <!-- User image -->
-               <img class="img-circle img-sm" src="./assets/dist/img/user4-128x128.jpg" alt="User Image">
+                 <span class="username">
+                       {{comm.user.firstname}} {{comm.user.lastname}}
+                             <span class="text-muted pull-right">{{comm.createdAt}}
+                       </span>
+                       </span>
+                       <span><!-- /.username -->
+              {{comm.description}} </span>
+              <input type="text" class="form-control input-sm" placeholder="{{comm.description}}" *ngIf="selectedComment">
+               <div class="box-tools pull-right" *ngIf="user.id===comm.user.id">
+                   <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="modifier votre publication" (click)="editComment(comm.id)">
+                     <i class="fa fa-edit fa-5x text-primary"></i></button>
+                   <button type="button" class="btn btn-box-tool" (click)="deleteComment(comm.id)" data-toggle="modal" data-target="#alertPop">
+                     <i class="fa fa-trash-o fa-5x text-danger"></i></button>
+                                   </div>
+                           </div>
+                       </div>
+                   </div>
 
-               <div class="comment-text">
-                     <span class="username">
-                       Luna Stark
-                       <span class="text-muted pull-right">8:03 PM Today</span>
-                     </span><!-- /.username -->
-                 It is a long established fact that a reader will be distracted
-                 by the readable content of a page when looking at its layout.
-               </div>
-               <!-- /.comment-text -->
-             </div>
-             <!-- /.box-comment -->
-           </div>
            <!-- /.box-footer -->
            <div class="box-footer">
              <!--<form action="#" method="post">-->
-               <img class="img-responsive img-circle img-sm" src="./assets/dist/img/user4-128x128.jpg" alt="Alt Text">
+               <img class="img-responsive img-circle img-sm" src="data:image/png;base64,{{user.photo}}" alt="Alt Text">
                <!-- .img-push is used to add margin to elements next to floating images -->
+
                <div class="img-push">
-                 <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+                 <form  [formGroup]="CommentForm">
+                 <input type="text" class="form-control input-sm" placeholder="Press enter to post comment" formControlName="description" [(ngModel)]="commentAttribute.description"
+                 (keyup.enter)="AddComment(pub.id)">
+                 </form>
                </div>
+
+
              <!--</form>-->
            </div>
            <!-- /.box-footer -->
+
          </div>
          <!-- /.box -->
+
        </div>
      </div>
             </div>
@@ -284,5 +293,126 @@
      </div>
      <!-- /.row -->
 
+
    </section>
    <!-- /.content -->
+
+   <!--Modal modifier pub-->
+   <div class="modal fade" id="updatePub">
+     <div class="modal-dialog">
+
+       <div class="modal-content">
+
+         <div class="modal-header">
+           <h4 class="modal-title">Modifier Une Publication</h4>
+           <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
+         </div>
+
+               <div class="modal-body">
+                 <form [formGroup]="updatePubForm" >
+                   <div class="form-group">
+                 <label class="normal-pill-input" formControlName="description" [(ngModel)]="pubUp.description">Description</label>
+                 <textarea rows="2" class="form-control" placeholder="votre description" value=""></textarea>
+               </div>
+               <div class="form-group">
+                <label for="normal-pill-input">Addresse</label>
+                <input class="form-control" type="text" id="normal-pill-input" placeholder="addresse" value="" formControlName="position" [(ngModel)]="pubUp.position">
+              </div>
+                 <div class="form-group">
+                   <label for="normal-pill-input">Photo</label>
+                 <div class="custom-file">
+               <input type="file" class="custom-file-input" (change)="UploadChange($event)">
+             <label class="custom-file-label" for="customFileLang">Sélectionner le fichier </label>
+             </div>
+           </div>
+
+           <div class="pull-right">
+                     <button class="btn btn-outline-secondary btn-sm" type="button" data-dismiss="modal">Ferme</button>
+                     <button type="submit" name="button" class="btn btn-success btn-sm" (click)="userUpdate() ;selectedUser = user">Modifier</button>
+               </div>
+               </form>
+         </div>
+       </div>
+
+     </div>
+   </div>
+   <!--End Modal modifier pub-->
+
+
+
+
+<!--Settings-->
+<div class="modal fade" id="settings">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Settings</h4>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+            <div class="modal-body">
+              <form [formGroup]="updateUserForm" >
+               <div class="form-group">
+              <label for="normal-pill-input">Prénom</label>
+              <input class="form-control" type="text" id="normal-pill-input" placeholder="prénom" value="{{user.firstname}}" formControlName="firstname" [(ngModel)]="credentials.firstname">
+            </div>
+             <div class="form-group">
+              <label for="normal-pill-input">Nom</label>
+              <input class="form-control" type="text" id="normal-pill-input" placeholder="nom" value="{{user.lastname}}" formControlName="lastname" [(ngModel)]="credentials.lastname">
+            </div>
+             <div class="form-group">
+              <label for="normal-pill-input">Email</label>
+              <input class="form-control" type="email" id="normal-pill-input" placeholder="email" value="{{user.email}}" formControlName="email" [(ngModel)]="credentials.email">
+            </div>
+             <div class="form-group">
+              <label for="normal-pill-input">Mot De Passe</label>
+              <input class="form-control" type="password" id="normal-pill-input" placeholder="******" formControlName="password" [(ngModel)]="credentials.password">
+            </div>
+            <div class="form-group">
+                <label for="normal-pill-input">Photo</label>
+              <div class="custom-file">
+            <input type="file" class="custom-file-input" (change)="UploadChange($event)">
+          <label class="custom-file-label" for="customFileLang">Sélectionner le fichier </label>
+          </div>
+        </div>
+            <div class="form-group">
+          <label class="normal-pill-input" formControlName="description" [(ngModel)]="credentials.description">Description</label>
+          <textarea rows="2" class="form-control" placeholder="votre description" value="{{user.description}}"></textarea>
+        </div>
+        <div class="form-group">
+         <label for="normal-pill-input">Lieux</label>
+         <input class="form-control" type="text" id="normal-pill-input" placeholder="lieux" value="{{user.place}}" formControlName="position" [(ngModel)]="credentials.position">
+       </div>
+        <div class="pull-right">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" data-dismiss="modal">Ferme</button>
+                  <button type="submit" name="button" class="btn btn-success btn-sm" (click)="userUpdate() ;selectedUser = user">Update</button>
+            </div>
+            </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!--End Settings-->
+<!--Alert modal-->
+<div class="modal modal-success fade"  id="alertPop" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Alert</h4>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+  <div class="modal-body">
+    <p align="justify">Votre {{operation == 'pub' ? 'publication' : operation == 'comment' ? 'commentaire' :''}} est supprimer avec succès ...</p>
+      </div>
+    <div class="modal-footer">
+            <button class="btn btn-outline btn-sm" type="button" data-dismiss="modal">Close</button>
+              </div>
+    </div>
+  </div>
+</div>
+<!--End Alert modal-->

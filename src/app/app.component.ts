@@ -1,7 +1,7 @@
 import { Component,OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-//import 'leaflet';
-//declare let L;
+
+
 
 import {AppService} from './app.service';
 
@@ -13,14 +13,14 @@ import {AppService} from './app.service';
 export class AppComponent implements OnInit{
   title = 'iChange-FrontEnd';
 
-constructor(private appService:AppService,private router:Router) { }
-ngOnInit() {
-  if(!this.appService.authenticated){
-    this.router.navigateByUrl('/');
-    }else {
-    this.router.navigateByUrl('/profile');
-  }
-}
 
+  constructor(private appService:AppService,private router:Router) { }
+  ngOnInit() {
+    if(!this.appService.authenticated){
+      this.router.navigateByUrl('/');
+      }else {
+      this.router.navigateByUrl('/profile');
+    }
+  }
 
 }

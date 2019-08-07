@@ -68,7 +68,7 @@ this.appService.authenticate(this.credentials,()=>{
   this.hideContentPage.emit(this.hideContent);
         if (this.principal.authorities[0].authority === 'ROLE_USER') {
         this.router.navigateByUrl('/profile');
-        jQuery("#alert").modal('show');
+      //jQuery("#alert").modal('show');
       }
       else if  (this.principal.authorities[0].authority  === 'ROLE_ADMIN' ) {
           this.showAdmin=!this.showAdmin;
@@ -77,7 +77,7 @@ this.appService.authenticate(this.credentials,()=>{
 
 
 
-  jQuery("#modalSmall").modal("hide");
+//  jQuery("#modalSmall").modal("hide");
 
 })
 

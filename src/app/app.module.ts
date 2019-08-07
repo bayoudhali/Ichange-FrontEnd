@@ -21,11 +21,14 @@ import { UsersComponent } from './admin/users/users.component';
 import { PubsComponent } from './admin/pubs/pubs.component';
 import { PubnComponent } from './admin/pubn/pubn.component';
 import   {Pub} from './shared/pub';
+import   {Comments} from './shared/comments';
 import {ProfileService} from './profile/profile.service';
 import {UserService} from './shared/user.service';
 import {AppService} from './app.service';
 import { XhrInterceptor } from './xhr.interceptor';
 import { principalReducer } from './shared/principal.reducer';
+import { MapComponent } from './map/map.component';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +45,8 @@ import { principalReducer } from './shared/principal.reducer';
     MembersComponent,
     UsersComponent,
     PubsComponent,
-    PubnComponent
+    PubnComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,

@@ -2,3 +2,13 @@
 
 <app-menu></app-menu>
 <router-outlet></router-outlet>
+ <!--
+ constructor(private appService:AppService,private router:Router) { }
+ ngOnInit() {
+   if(!this.appService.authenticated){
+     this.router.navigateByUrl('/');
+     }else {
+     this.router.navigateByUrl('/profile');
+   }
+ }
+-->
