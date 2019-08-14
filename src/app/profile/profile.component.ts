@@ -23,16 +23,18 @@ export class ProfileComponent implements OnInit {
 
 private principal: Principal;
 pubs:Pub[];
-comments:Comments[]
+onePub:Pub[];
+comments:Comments[];
+oneComment:Comments[]
 user:User;
-idPub:number;
-idComment:number;
 PubForm: FormGroup;
 CommentForm:FormGroup;
-selectedComment:boolean=false;
-hideComment:boolean=true;
+showDataPub:boolean;
+showDataComment:boolean;
 base64textString = [];
 file:any;
+updateInput:boolean;
+hideBlocComment:boolean=true;
 operation:string="pub";
 pubAttribute ={
   description : '',
@@ -43,11 +45,8 @@ commentAttribute={
 }
 updateUserForm: FormGroup;
 updatePubForm:FormGroup;
+updateCommentForm:FormGroup;
 selecetedUser:User;
-pubUp={
-  description:'',
-  position:''
-}
 credentials ={
   firstname : '',
   lastname : '',
@@ -59,13 +58,15 @@ credentials ={
 
   constructor(private ServiceProfile:ProfileService,
     private appService:AppService,private router:Router,private store: Store<PrincipalState>,private ServiceUser:UserService,private fb: FormBuilder) {
-      this.PubForm=this.fb.group({
-        description :['', Validators.required],
-        position :['', Validators.required]
-  });
-  this.CommentForm=this.fb.group({
-    description :['', Validators.required]
+
+this.updateFormPub();
+this.createFormComment();
+this.updateFormComment();
+this.PubForm=this.fb.group({
+  description :['', Validators.required],
+  position :['', Validators.required]
 });
+
   this.updateUserForm=this.fb.group({
     firstname : '',
     lastname : '',
@@ -75,10 +76,8 @@ credentials ={
     position:''
 });
 
-this.updatePubForm=this.fb.group({
-  description:'',
-  position:''
-});
+
+
     }
 
   ngOnInit() {
@@ -86,24 +85,24 @@ this.updatePubForm=this.fb.group({
     this.loadPub();
     this.loadComments();
     this.loadUser();
-    //this.initProduit();
-    this.AddComment(this.idPub);
-    this.editComment(this.idComment);
-    this.deletePub(this.idPub);
-    this.deleteComment(this.idComment);
+
         }
-
-  loadPub(){
-
-  this.ServiceProfile.getPubs().subscribe(
-    data => {console.log(this.pubs =data);
-          },
-    error => {console.log('error to display data')},
-    () => {console.log('succes to load data');
-      }
-                );
-
-}
+      updateFormPub(){
+      this.updatePubForm=this.fb.group({
+        description:'',
+        position:''
+            });
+    }
+    createFormComment(){
+      this.CommentForm=this.fb.group({
+        description :['', Validators.required]
+    });
+    }
+    updateFormComment(){
+        this.updateCommentForm=this.fb.group({
+        description:''
+      });
+    }
 
 loadUser(){
   let email:string;
@@ -120,6 +119,17 @@ loadUser(){
   );
   }
 
+  loadPub(){
+
+  this.ServiceProfile.getPubs().subscribe(
+    data => {console.log(this.pubs =data);
+          },
+    error => {console.log('error to display data')},
+    () => {console.log('succes to load data');
+      }
+                );
+
+}
   UploadChange(evt: any) {
    this.file= evt.target.files[0];
 
@@ -144,14 +154,40 @@ const pubData= new Pub(publ.description,publ.position,this.base64textString[0],t
     res => {
     console.log('succes')
 
+    this.loadPub();
+
     }
   )
 
   }
+  loadOnePub(pubid:number){
+    this.showDataPub=true
+    this.ServiceProfile.getOnePub(pubid).subscribe(
+      data => {console.log(this.onePub =data);
+            },
+      error => {console.log('error to display data')},
+      () => {console.log('succes to load data');
+        }
+                  );
+  }
+  editPost(pubid:number){
+    const updatePub=this.updatePubForm.value;
+  const  dataUpdated  =new Pub(updatePub.description,updatePub.position,this.base64textString[0],this.user.id);
+  this.ServiceProfile.updatePub(pubid,dataUpdated).subscribe(
+    res => {
+    console.log('Pub update with success !')
+    this.updateFormPub();
+    this.loadPub();
+
+    }
+  )
+  }
+
   deletePub(pubid:number){
     this.ServiceProfile.removePub(pubid).subscribe(
       res => {
       console.log('pub deleted with succes')
+      this.loadPub();
       }
     );
     this.operation='pub';
@@ -179,11 +215,6 @@ loadComments(){
       }
                     );
 }
-
-  initProduit() {
-  //  this.selecetedUser = new User();
-
-  }
   AddComment(pubid:number){
 
     const comment =this.CommentForm.value;
@@ -191,14 +222,35 @@ loadComments(){
       this.ServiceProfile.addComment(commentData).subscribe(
         res => {
         console.log('Comment Add with succes')
+        this.createFormComment();
+        this.loadComments();
 
         }
       );
   }
-editComment(id:number){
-  //this.selectedComment=true;
-  //this.hideComment=false;
-  console.log(id);
+  loadOneComment(id:number){
+    this.showDataComment=true
+    this.ServiceProfile.getOneComment(id).subscribe(
+      data => {console.log(this.oneComment =data);
+            },
+      error => {console.log('error to display data')},
+      () => {console.log('succes to load data');
+        }
+                  );
+  }
+editComment(id:number,pubid:number){
+
+const updateComment = this.updateCommentForm.value;
+const dataUpdated= new Comments(updateComment.description,pubid,this.user.id)
+this.ServiceProfile.updateComment(id,dataUpdated).subscribe(
+  res => {
+  console.log('Comment updated with succes')
+  this.updateFormComment();
+
+  this.loadComments();
+
+  }
+);
 }
 
 deleteComment(idComment:number){
@@ -206,9 +258,13 @@ deleteComment(idComment:number){
   this.ServiceProfile.removeComment(idComment).subscribe(
     res => {
     console.log('Comment deleted with succes')
+    this.loadComments();
     }
   );
 
+}
+test(id:number):number{
+  return id;
 }
 logout(){
    this.appService.logout(()=>{

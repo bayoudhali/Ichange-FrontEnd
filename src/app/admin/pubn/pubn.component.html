@@ -19,9 +19,9 @@
           </div>
           <!-- /.user-block -->
           <div class="box-tools">
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Approved This Pub">
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Approved This Pub" (click)="approvedPub(pub.id)">
               <i class="fa fa-check-square-o"></i></button>
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="delete This Pub"><i class="fa fa-times"></i></button>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="delete This Pub"  (click)="deletePub(pub.id)"><i class="fa fa-times"></i></button>
           </div>
           <!-- /.box-tools -->
         </div>

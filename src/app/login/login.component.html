@@ -10,7 +10,7 @@
       </div>
 
             <div class="modal-body">
-              <form [formGroup]="loginForm" (submit)="login()">
+              <form [formGroup]="loginForm" >
         <div class="form-group">
           <label>email</label>
           <input type="email" class="form-control" formControlName="email" [(ngModel)]="credentials.email">
@@ -21,7 +21,7 @@
         </div>
         <div class="pull-right">
               <button class="btn btn-outline-secondary btn-sm" type="button" data-dismiss="modal">Ferme</button>
-              <button type="submit" name="button" class="btn btn-success btn-sm" >Connecte</button>
+              <button type="submit" name="button" class="btn btn-success btn-sm" (click)="login()" data-dismiss="modal">Connecte</button>
         </div>
       </form>
       </div>

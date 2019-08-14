@@ -11,7 +11,7 @@
 
     <!--nav profile-->
     <div class="dropdown float-right d-none d-lg-block">
-          <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+          <a (click)="loadPub();this.loadComments();" class="nav-link pr-0 leading-none" data-toggle="dropdown">
             <img class="avatar" src="data:image/png;base64,{{user.photo}}">
             <span class="ml-2 d-none d-lg-block">
               <span class="text-default">{{user.firstname}} {{user.lastname}}</span>
@@ -173,38 +173,7 @@
 
           <div class="tab-content">
                      <div class="active tab-pane">
-               <!-- Post -->
-               <div class="post">
-                 <div class="user-block">
-                   <img class="img-circle img-bordered-sm" src="./assets/dist/img/user1-128x128.jpg" alt="user image">
-                       <span class="username">
-                         <a href="#">Jonathan Burke Jr.</a>
 
-                       </span>
-                   <span class="description">Shared publicly - 7:30 PM today</span>
-                 </div>
-                 <!-- /.user-block -->
-                 <p>
-                   Lorem ipsum represents a long-held tradition for designers,
-                   typographers and the like. Some people hate it and argue for
-                   its demise, but others ignore the hate as they create awesome
-                   tools to help create filler text for everyone from bacon lovers
-                   to Charlie Sheen fans.
-                 </p>
-                 <ul class="list-inline">
-                   <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> J'aime(10)</a></li>
-                   <li><a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Commentaire(5)</a></li>
-
-                 </ul>
-                <!--  <form action="#" method="post">-->
-               <img class="img-responsive img-circle img-sm" src="./assets/dist/img/user4-128x128.jpg" alt="Alt Text">
-               <!-- .img-push is used to add margin to elements next to floating images -->
-               <div class="img-push">
-                 <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
-               </div>
-          <!--   </form>-->
-               </div>
-               <!-- /.post -->
                <div class="post" *ngFor="let pub of pubs">
          <!-- Box Comment -->
          <div class="box box-widget" *ngIf="pub.enable!=false">
@@ -216,10 +185,50 @@
              </div>
              <!-- /.user-block -->
              <div class="box-tools" *ngIf="user.id===pub.userId.id">
-                           <button type="button" class="btn btn-box-tool" data-toggle="modal" data-target="#updatePub">
+                           <button type="button" class="btn btn-box-tool" (click)="loadOnePub(pub.id)" data-toggle="tooltip" title="modifier votre Publication" data-toggle="modal" data-target="#updatePub">
                              <i class="fa fa-edit"></i></button>
-                           <button type="button" class="btn btn-box-tool" (click)="deletePub(pub.id)" data-widget="remove" data-toggle="modal" data-target="#alertPop">
+                           <button type="button" class="btn btn-box-tool" (click)="operation='pub'; loadOnePub(pub.id)" data-toggle="tooltip" title="voulez-vous supprimer cette publication définitivement ?" data-widget="remove" data-toggle="modal" data-target="#alertPop">
                              <i class="fa fa-times"></i></button>
+                     <!--Modal modifier pub-->
+                     <div class="modal fade" id="updatePub">
+                       <div class="modal-dialog">
+
+                         <div class="modal-content">
+
+                           <div class="modal-header">
+                             <h4 class="modal-title">Modifier Votre Publication</h4>
+                             <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
+                           </div>
+
+                                 <div class="modal-body" *ngIf="showDataPub">
+                                   <form [formGroup]="updatePubForm" >
+                                     <div class="form-group">
+                                   <label class="normal-pill-input" >Description</label>
+                                   <textarea rows="2" class="form-control"  formControlName="description"  value="{{onePub.description}}"></textarea>
+                                 </div>
+                                 <div class="form-group">
+                                  <label for="normal-pill-input">Addresse</label>
+                                  <input class="form-control" type="text" id="normal-pill-input" formControlName="position"    value="{{onePub.position}}">
+                                </div>
+                                   <div class="form-group">
+                                     <label for="normal-pill-input">Photo</label>
+                                   <div class="custom-file">
+                                 <input type="file" class="custom-file-input"  (change)="UploadChange($event)" accept="image/jpeg, image/png">
+                               <label class="custom-file-label" for="customFileLang">Sélectionner le fichier </label>
+                               </div>
+                             </div>
+
+                             <div class="pull-right">
+                                       <button class="btn btn-outline-secondary btn-sm" type="button" data-dismiss="modal">Ferme</button>
+                                       <button type="submit" name="button" class="btn btn-success btn-sm" (click)="editPost(onePub.id)" data-dismiss="modal">Modifier</button>
+                                 </div>
+                                 </form>
+                           </div>
+                         </div>
+
+                       </div>
+                     </div>
+                     <!--End Modal modifier pub-->
                          </div>
              <!-- /.box-tools -->
            </div>
@@ -239,30 +248,56 @@
            <div class="box-footer box-comments" *ngFor="let comm of comments">
 
                <div class="box-comment"  *ngIf="pub.id===comm.pub">
-
                      <img class="img-circle img-sm" src="data:image/png;base64,{{comm.user.photo}}" alt="User Image">
-
                <div class="comment-text">
                  <span class="username">
-                       {{comm.user.firstname}} {{comm.user.lastname}}
+                    {{comm.user.firstname}} {{comm.user.lastname}}
                              <span class="text-muted pull-right">{{comm.createdAt}}
                        </span>
                        </span>
                        <span><!-- /.username -->
               {{comm.description}} </span>
-              <input type="text" class="form-control input-sm" placeholder="{{comm.description}}" *ngIf="selectedComment">
-               <div class="box-tools pull-right" *ngIf="user.id===comm.user.id">
-                   <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="modifier votre publication" (click)="editComment(comm.id)">
+                         <div class="box-tools pull-right" *ngIf="user.id===comm.user.id">
+                   <button type="button" class="btn btn-box-tool" (click)="loadOneComment(comm.id)" data-toggle="tooltip" title="modifier votre commentaire"   data-toggle="modal" data-target="#updateComment" >
                      <i class="fa fa-edit fa-5x text-primary"></i></button>
-                   <button type="button" class="btn btn-box-tool" (click)="deleteComment(comm.id)" data-toggle="modal" data-target="#alertPop">
+                   <button type="button" class="btn btn-box-tool" (click)="operation='comment'; loadOneComment(comm.id)" data-toggle="tooltip" title="voulez-vous supprimer cette commentaire définitivement ?" data-toggle="modal" data-target="#alertPop">
                      <i class="fa fa-trash-o fa-5x text-danger"></i></button>
-                                   </div>
+                     <!--modal update comment-->
+                     <div class="modal fade" id="updateComment">
+                       <div class="modal-dialog">
+                         <div class="modal-content">
+                           <div class="modal-header">
+                             <h4 class="modal-title">Modifier Votre Commentaire</h4>
+                             <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
                            </div>
-                       </div>
-                   </div>
+                           <div class="modal-body" *ngIf="showDataComment">
+                              <form [formGroup]="updateCommentForm" >
+                             <div class="box-footer">
+                               <img class="img-responsive img-circle img-sm" src="data:image/png;base64,{{user.photo}}" alt="Alt Text">
+                                 <!-- .img-push is used to add margin to elements next to floating images -->
+                                   <div class="img-push" >
 
-           <!-- /.box-footer -->
-           <div class="box-footer">
+                                   <input type="text" class="form-control input-sm col-lg-11"  formControlName="description"  value="{{oneComment.description}}">
+                                   <button type="button" class="btn btn-box-tool" (click)="editComment(oneComment.id,pub.id)" data-dismiss="modal">
+                                  <i class="fe fe-send"></i>
+                                </button>
+                                 </div>
+                             </div>
+                             </form>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                       <!--end modal update comment-->
+                                   </div>
+                                 </div>
+
+                       </div>
+
+                     </div>
+
+                   <!-- /.box-footer -->
+           <div class="box-footer" >
              <!--<form action="#" method="post">-->
                <img class="img-responsive img-circle img-sm" src="data:image/png;base64,{{user.photo}}" alt="Alt Text">
                <!-- .img-push is used to add margin to elements next to floating images -->
@@ -274,22 +309,23 @@
                  </form>
                </div>
 
-
-             <!--</form>-->
+                 <!--</form>-->
            </div>
            <!-- /.box-footer -->
 
          </div>
          <!-- /.box -->
-
-       </div>
+         </div>
      </div>
             </div>
+
            <!-- /.tab-content -->
          </div>
+
          <!-- /.nav-tabs-custom -->
        </div>
        <!-- /.col -->
+
      </div>
      <!-- /.row -->
 
@@ -297,46 +333,7 @@
    </section>
    <!-- /.content -->
 
-   <!--Modal modifier pub-->
-   <div class="modal fade" id="updatePub">
-     <div class="modal-dialog">
 
-       <div class="modal-content">
-
-         <div class="modal-header">
-           <h4 class="modal-title">Modifier Une Publication</h4>
-           <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
-         </div>
-
-               <div class="modal-body">
-                 <form [formGroup]="updatePubForm" >
-                   <div class="form-group">
-                 <label class="normal-pill-input" formControlName="description" [(ngModel)]="pubUp.description">Description</label>
-                 <textarea rows="2" class="form-control" placeholder="votre description" value=""></textarea>
-               </div>
-               <div class="form-group">
-                <label for="normal-pill-input">Addresse</label>
-                <input class="form-control" type="text" id="normal-pill-input" placeholder="addresse" value="" formControlName="position" [(ngModel)]="pubUp.position">
-              </div>
-                 <div class="form-group">
-                   <label for="normal-pill-input">Photo</label>
-                 <div class="custom-file">
-               <input type="file" class="custom-file-input" (change)="UploadChange($event)">
-             <label class="custom-file-label" for="customFileLang">Sélectionner le fichier </label>
-             </div>
-           </div>
-
-           <div class="pull-right">
-                     <button class="btn btn-outline-secondary btn-sm" type="button" data-dismiss="modal">Ferme</button>
-                     <button type="submit" name="button" class="btn btn-success btn-sm" (click)="userUpdate() ;selectedUser = user">Modifier</button>
-               </div>
-               </form>
-         </div>
-       </div>
-
-     </div>
-   </div>
-   <!--End Modal modifier pub-->
 
 
 
@@ -397,20 +394,21 @@
 </div>
 <!--End Settings-->
 <!--Alert modal-->
-<div class="modal modal-success fade"  id="alertPop" tabindex="-1" role="dialog">
+<div class="modal modal-danger fade"  id="alertPop" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-sm" role="document">
 
     <div class="modal-content">
 
-      <div class="modal-header">
+      <div class="modal-header" *ngIf="showDataPub;showDataComment">
         <h4 class="modal-title">Alert</h4>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"></button>
       </div>
   <div class="modal-body">
-    <p align="justify">Votre {{operation == 'pub' ? 'publication' : operation == 'comment' ? 'commentaire' :''}} est supprimer avec succès ...</p>
+    <p align="justify">Voulez-vous supprimer {{operation == 'pub' ? 'Cette publication ?!' : operation == 'comment' ? 'Cette commentaire ?!' :''}}</p>
       </div>
     <div class="modal-footer">
             <button class="btn btn-outline btn-sm" type="button" data-dismiss="modal">Close</button>
+            <button type="submit" name="button" class="btn btn-danger btn-sm" (click)="operation == 'pub' ? deletePub(onePub.id) : deleteComment(oneComment.id)" data-dismiss="modal">Supprimer</button>
               </div>
     </div>
   </div>
