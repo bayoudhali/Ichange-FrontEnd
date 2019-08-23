@@ -15,24 +15,34 @@ export class MapComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-  var map = L.map('map').setView([33.8439408, 9.400138], 12);
- var tiles = L.esri.basemapLayer("Streets").addTo(map);
+// Fonction d'initialisation du composant.
+ngOnInit() {
+  var map = L.map('map', {
+      // Set latitude and longitude of the map center (required)
+      center: [37.7833, -122.4167],
+      // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
+      zoom: 10
+  });
 
- // create the geocoding control and add it to the map
- var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+  L.control.scale().addTo(map);
 
- // create an empty layer group to store the results and add it to the map
- var results = L.layerGroup().addTo(map);
+  // Create a Tile Layer and add it to the map
+  //var tiles = new L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png').addTo(map);
+  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
- // listen for the results event and add every result to the map
- searchControl.on("results", function(data) {
-     results.clearLayers();
-     for (var i = data.results.length - 1; i >= 0; i--) {
-         results.addLayer(L.marker(data.results[i].latlng));
-     }
- });
+    var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+
+    var results = new L.LayerGroup().addTo(map);
+
+    searchControl.on('results', function(data){
+      results.clearLayers();
+      for (var i = data.results.length - 1; i >= 0; i--) {
+        results.addLayer(L.marker(data.results[i].latlng));
+      }
+    });
+    //setTimeout(function(){$('.pointer').fadeOut('slow');},3400);
+
 }
-
-
 }

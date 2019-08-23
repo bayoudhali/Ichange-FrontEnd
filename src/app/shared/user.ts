@@ -7,7 +7,7 @@ export class User{
                public password?:string,
                public description?:string,
                public place?:string,
-               public photo?:any){
+               public photo?:any,){
 
   }
 }

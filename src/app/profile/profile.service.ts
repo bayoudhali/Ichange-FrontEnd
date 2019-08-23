@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {API_URLS} from '../config/api.url.config';
 import {Pub} from '../shared/pub';
 import{Comments} from '../shared/comments';
+import{Likes} from '../shared/likes';
 
 @Injectable()
 export class ProfileService {
@@ -18,6 +19,9 @@ getPubs():Observable<any>{
 }
 getOnePub(id:number):Observable<any>{
   return this.http.get(API_URLS.GET_ONE_PUB + '/'+id);
+}
+getPubsByOrder():Observable<any>{
+  return this.http.get(API_URLS.GET_PUB_BY_ORDER);
 }
 addPub(pub: Pub):Observable<any>{
   return this.http.post(API_URLS.PUBS_URL,pub);
@@ -42,6 +46,15 @@ updateComment(id:number,comment: Comments):Observable<any>{
 }
 removeComment(id:number):Observable<any>{
 return this.http.delete(API_URLS.ADD_COMMENTS_URL + '/'+id);
+}
+getLikes():Observable<any>{
+return this.http.get(API_URLS.ALL_LIKES_URL);
+}
+addLike(like:Likes):Observable<any>{
+  return this.http.post(API_URLS.LIKES_URL,like);
+}
+removeLike(id:number):Observable<any>{
+return this.http.delete(API_URLS.LIKES_URL + '/'+id);
 }
 
 }

@@ -23,11 +23,6 @@ const routes: Routes = [
   {path: 'users', component: UsersComponent},
   {path: 'pubs', component: PubsComponent},
   {path: 'pubn', component: PubnComponent},
-  {
-  path: '',
-  redirectTo: '/',
-   pathMatch:'full'
-}
 ];
 
 @NgModule({

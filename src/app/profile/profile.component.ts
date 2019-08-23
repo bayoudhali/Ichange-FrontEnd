@@ -3,8 +3,10 @@ import {Router} from '@angular/router';
 import { Store } from '@ngrx/store';
 import {FormGroup,FormBuilder,Validators} from '@angular/forms';
 
+
 import   {Pub} from '../shared/pub';
 import   {Comments} from '../shared/comments';
+import   {Likes} from '../shared/likes';
 import   {User} from '../shared/user';
 import {ProfileService} from '../profile/profile.service';
 import {UserService} from '../shared/user.service';
@@ -16,7 +18,7 @@ import { Principal } from '../shared/principal.model';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
+templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
@@ -24,9 +26,13 @@ export class ProfileComponent implements OnInit {
 private principal: Principal;
 pubs:Pub[];
 onePub:Pub[];
+PubByOrder:Pub[];
 comments:Comments[];
-oneComment:Comments[]
+oneComment:Comments[];
 user:User;
+likes:[];
+userLike:[];
+likeIt:boolean;
 PubForm: FormGroup;
 CommentForm:FormGroup;
 showDataPub:boolean;
@@ -36,6 +42,9 @@ file:any;
 updateInput:boolean;
 hideBlocComment:boolean=true;
 operation:string="pub";
+thumbs:string="Unlike";
+hideUnlike:boolean;
+hidelike:boolean=true;
 pubAttribute ={
   description : '',
   position : '',
@@ -55,17 +64,14 @@ credentials ={
   description:'',
   position:''
 }
-
   constructor(private ServiceProfile:ProfileService,
-    private appService:AppService,private router:Router,private store: Store<PrincipalState>,private ServiceUser:UserService,private fb: FormBuilder) {
+    private appService:AppService,private router:Router,private store: Store<PrincipalState>,private ServiceUser:UserService,
+    private fb: FormBuilder) {
+  this.createFormPub();
+  this.updateFormPub();
+  this.createFormComment();
+  this.updateFormComment();
 
-this.updateFormPub();
-this.createFormComment();
-this.updateFormComment();
-this.PubForm=this.fb.group({
-  description :['', Validators.required],
-  position :['', Validators.required]
-});
 
   this.updateUserForm=this.fb.group({
     firstname : '',
@@ -83,10 +89,17 @@ this.PubForm=this.fb.group({
   ngOnInit() {
 
     this.loadPub();
+    this.loadPubByOrder();
     this.loadComments();
     this.loadUser();
-
-        }
+    this.loadLike();
+                      }
+    createFormPub(){
+      this.PubForm=this.fb.group({
+        description :['', Validators.required],
+        position :['', Validators.required]
+      });
+    }
       updateFormPub(){
       this.updatePubForm=this.fb.group({
         description:'',
@@ -113,7 +126,7 @@ loadUser(){
   })
  console.log(this.principal);
  this.ServiceUser.getUserByEmail(email).subscribe(
-   data => {this.user=data},
+   data => {console.log(this.user=data);},
    error => {console.log('error to display data')},
    () => {console.log('succes to load data')}
   );
@@ -125,9 +138,20 @@ loadUser(){
     data => {console.log(this.pubs =data);
           },
     error => {console.log('error to display data')},
-    () => {console.log('succes to load data');
+    () => {console.log('succes to load pub');
       }
                 );
+
+}
+loadPubByOrder(){
+
+this.ServiceProfile.getPubsByOrder().subscribe(
+  data => {console.log(this.PubByOrder =data);
+            },
+  error => {console.log('error to display PubByOrder')},
+  () => {console.log('succes to load PubByOrder');
+    }
+              );
 
 }
   UploadChange(evt: any) {
@@ -153,7 +177,8 @@ const pubData= new Pub(publ.description,publ.position,this.base64textString[0],t
   this.ServiceProfile.addPub(pubData).subscribe(
     res => {
     console.log('succes')
-
+    //this.createFormPub();
+  //  jQuery("#alertNotif").modal();
     this.loadPub();
 
     }
@@ -178,6 +203,7 @@ const pubData= new Pub(publ.description,publ.position,this.base64textString[0],t
     console.log('Pub update with success !')
     this.updateFormPub();
     this.loadPub();
+    this.loadPubByOrder();
 
     }
   )
@@ -224,8 +250,8 @@ loadComments(){
         console.log('Comment Add with succes')
         this.createFormComment();
         this.loadComments();
-
-        }
+        this.loadPub();
+              }
       );
   }
   loadOneComment(id:number){
@@ -248,7 +274,6 @@ this.ServiceProfile.updateComment(id,dataUpdated).subscribe(
   this.updateFormComment();
 
   this.loadComments();
-
   }
 );
 }
@@ -259,12 +284,48 @@ deleteComment(idComment:number){
     res => {
     console.log('Comment deleted with succes')
     this.loadComments();
+      this.loadPub();
     }
   );
 
 }
-test(id:number):number{
-  return id;
+loadLike(){
+
+        this.ServiceProfile.getLikes().subscribe(
+          data => {this.likes =data;
+          this.hideUnlike=true;
+          if(this.likes.length!=0){
+          this.hidelike=false;
+        }},
+          error => {console.log('error to display Likes')},
+          () => {console.log('succes to load Likes');
+        }
+      );
+
+  }
+
+AddLike(pubid:number){
+    const like = new Likes(pubid,this.user.id)
+    this.ServiceProfile.addLike(like).subscribe(
+      res => {
+      console.log('Like Add with succes')
+        this.thumbs='like';
+          this.loadPub();
+          this.loadLike();
+            }
+    );
+}
+
+deleteLike(idLike:number){
+  this.thumbs='Unlike';
+  this.operation='comment';
+  this.ServiceProfile.removeLike(idLike).subscribe(
+    res => {
+    console.log('like deleted with succes')
+        this.loadPub();
+    }
+  );
+
 }
 logout(){
    this.appService.logout(()=>{

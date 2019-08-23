@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 
 import {ProfileService} from '../../profile/profile.service';
 import {MainService} from '../main/main.service';
@@ -16,23 +16,23 @@ pubs:[];
   ngOnInit() {
     this.getAllPubs();
 
-  }
+        }
 
   getAllPubs(){
     this.ServiceProfile.getPubs().subscribe(
-      data => {console.log(this.pubs =data);
+      data => {console.log(this.pubs =data);},
+      error => {console.log('error to display data')
             },
-      error => {console.log('error to display data')},
       () => {console.log('succes to load data');
         });
-  }
-  approvedPub(idPub:number){
-    const pub = new Pub();
+        }
+        approvedPub(idPub:number){
+      const pub = new Pub();
     this.ServiceMain.updateStatusPub(idPub,pub).subscribe(
       res => {
       console.log('pub Approved with succes')
       this.getAllPubs();
-      }
+          }
     );
   }
   deletePub(pubid:number){

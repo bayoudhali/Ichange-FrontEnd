@@ -21,6 +21,7 @@
     "@angular/router": "~8.0.1",
     "@asymmetrik/ngx-leaflet": "^6.0.1",
     "@ngrx/store": "^8.1.0",
+    "angular-notifier": "^4.1.1",
     "leaflet": "^1.5.1",
     "leaflet-search": "^2.9.8",
     "ng-bootstrap": "^1.6.3",

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import {MainService} from '../main/main.service';
-
+import {PubnComponent} from '../pubn/pubn.component';
 
 @Component({
   selector: 'app-main',
@@ -14,7 +13,9 @@ name :string ="dashboard";
 CountUser:number;
 
 CountPubs:number;
-CountComments:number
+CountComments:number;
+enable=true;
+
   constructor(private ServiceMain:MainService) { }
 
   ngOnInit() {

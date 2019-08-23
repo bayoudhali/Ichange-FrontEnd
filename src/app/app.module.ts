@@ -48,7 +48,7 @@ import {MainService} from './admin/main/main.service';
     PubsComponent,
     PubnComponent,
     MapComponent
-  ],
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
